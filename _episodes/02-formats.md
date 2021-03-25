@@ -72,65 +72,27 @@ If you do not have downloaded the metos_python data for this lesson, please see 
 In this example, we will be looking at the metadataof a netCDF file. For this we open the netCDF file with the [netCDF4 python](http://unidata.github.io/netcdf4-python/) package you were asked to install. 
 
 <pre data-executable="true" data-language="python">
-from netCDF4 import Dataset
+import xarray as xr
 nc_f = 'tpw_v07r01_200910.nc4.nc'  # Your filename
-nc_fid = Dataset(nc_f, 'r')  # Dataset is the class behavior to open the file
-                             # and create an instance of the ncCDF4 class
+nc_fid = xr.open_dataset(nc_f)               
 print(nc_fid)
 nc_fid.close()
 </pre>
 
 
 ~~~
-<class 'netCDF4._netCDF4.Dataset'>
-root group (NETCDF4 data model, file format HDF5):
-    Conventions: CF-1.6
-    title: Monthly mean total precipitable water (total column water vapor) and anomalies on a 1.0 degree grid made from RSS Version-7 microwave radiometer data
-    institution: Remote Sensing Systems
-    source: Satellite Microwave Radiometer brightness temperatures converted to precipitable water using RSS Version-7 algorithm
-    references: More information is available at http://www.remss.com/measurements/atmospheric-water-vapor/tpw-1-deg-product ; See also Wentz, FJ, L Ricciardulli, KA Hilburn and others, 2007, How much more rain will global warming bring?, Science, 317, 233-235, and Wentz, FJ, MC Schabel, 2000, Precise climate monitoring using complementary satellite data sets, Nature, 403, 414-416.
-    history: 2012, Carl A Mears, Remote Sensing Systems, data set created from V-7 DISCOVER satellite microwave vapor data
-    Metadata_Conventions: CF-1.6, Unidata Dataset Discovery v1.0, NOAA CDR v1.0, GDS v2.0
-    standard_name_vocabulary: CF Standard Name Table (v19, 22 March 2012)
-    id: tpw_v07r01_200910.nc4.nc
-    naming_authority: www.remss.com
-    date_created: 2016-04-13T19:05:12Z
-    license: No constraints on data access or use
-    summary: Gridded monthly means and anomalies of total precipitable water (total column water vapor) from SSM/I, SSMIS, AMSRE, WindSat, and AMSR2 microwave radiometers processed with Version-7 algorithm
-    keywords: Atmosphere > Atmospheric Water Vapor > Precipitable Water
-    keywords_vocabulary: NASA Global Change Master Directory (GCMD) Earth Science keywords, Version 6.0
-    cdm_data_type: Grid
-    project: NASA MEaSUREs funded DISCOVER project
-    processing_level: NASA EOSDIS Data Level 4
-    creator_name: Frank J. Wentz, PI DISCOVER Project, Remote Sensing Systems
-    creator_url: http://www.remss.com/
-    creator_email: support@remss.com
-    geospatial_lat_min: -90.0
-    geospatial_lat_max: 90.0
-    geospatial_lon_min: 0.0
-    geospatial_lon_max: 360.0
-    geospatial_lat_units: degrees_north
-    geospatial_lon_units: degrees_east
-    geospatial_lat_resolution: 1.0
-    geospatial_lon_resolution: 1.0
-    time_coverage_start: 2009-10-01T00:00:00Z
-    time_coverage_end: 2009-10-31T23:59:59Z
-    time_coverage_duration: P1M
-    time_coverage_resolution: P1M
-    contributor_name: Frank J. Wentz, Carl A. Mears, Deborah K Smith, Marty Brewer
-    contributor_role: principalInvestigator, author/processor, pointOfContact, processor
-    acknowledgement: Microwave radiometer data are processed by Remote Sensing Systems with funding from the NASA Earth Science MEaSUREs Program and the NASA Earth Science Physical Oceanography Program.
-    product_version: V7.0
-    platform: DMSP-F08,DMSP-F10,DMSP-F11,DMSP-F13,DMSP-F14,DMSP-F15,DMSP-F16,DMSP-F17,AQUA,Coriolis,GCOM-W1
-    sensor: DMSP F08-F15 > SSM/I, DMSP F16-F17 > SSMIS, AQUA > AMSRE, Coriolis > WindSat, GCOM-W > AMSR2
-    spatial_resolution: 1.0 degree
-    comment: In precipitable_water and precipitable_water_anomaly, Missing data and land denoted by -999.0.  Ice is denoted by -500.0.  In other variables, missing data, land and ice are all denoted by -999.0.
-    identifier_product_DOI_authority: http://dx.doi.org/
-    identifier_product_DOI: http://dx.doi.org/10.5067/MEASURES/MULTIPLE/WATER_VAPOR/DATA301
-    provenance: Subset from tpw_v07r01_198801_201603.nc4.nc on host gale in the ops environment on 2016-04-13T19:05:12Z
-    dimensions(sizes): longitude(360), latitude(180), time(1), climatology_time(12), satnum(11), bnds(2)
-    variables(dimensions): float32 longitude(longitude), float32 latitude(latitude), int32 time(time), <class 'str'> platform_names(satnum), float32 longitude_bounds(longitude,bnds), float32 latitude_bounds(latitude,bnds), float32 time_bounds(time,bnds), float32 precipitable_water(time,latitude,longitude), float32 precipitable_water_anomaly(time,latitude,longitude), int8 satellites_used(time,satnum), float32 global_mean_precipitable_water_anomaly(time), float32 tropical_mean_precipitable_water_anomaly(time)
-    groups: 
+<xarray.Dataset>
+Dimensions:    (expver: 2, latitude: 721, longitude: 1440, time: 506)
+Coordinates:
+  * longitude  (longitude) float32 0.0 0.25 0.5 0.75 ... 359.0 359.2 359.5 359.8
+  * latitude   (latitude) float32 90.0 89.75 89.5 89.25 ... -89.5 -89.75 -90.0
+  * expver     (expver) int32 1 5
+  * time       (time) datetime64[ns] 1979-01-01 1979-02-01 ... 2021-02-01
+Data variables:
+    u10        (time, expver, latitude, longitude) float32 ...
+Attributes:
+    Conventions:  CF-1.6
+    history:      2021-03-09 15:11:30 GMT by grib_to_netcdf-2.16.0: /opt/ecmw...
 ~~~
 {: .output}
 
@@ -450,94 +412,43 @@ Let's have a look at a netCDF file called `sresa1b_ncar_ccsm3-example.nc` that f
 If you haven't downloaded this file, see [the setup instructions]({{ page.root }}/setup/):
 
 <pre data-executable="true" data-language="python">
-import netCDF4
-f = netCDF4.Dataset("sresa1b_ncar_ccsm3-example.nc", "r")
+import xarray as xr
+f = xr.open_dataset("sresa1b_ncar_ccsm3-example.nc")
 print(f)
-f.close()
 </pre>
 
 ~~~
-<class 'netCDF4._netCDF4.Dataset'>
-root group (NETCDF3_CLASSIC data model, file format NETCDF3):
-    CVS_Id: $Id$
-    creation_date: 
-    prg_ID: Source file unknown Version unknown Date unknown
-    cmd_ln: bds -x 256 -y 128 -m 23 -o /data/zender/data/dst_T85.nc
-    history: Tue Oct 25 15:08:51 2005: ncks -O -x -v va -m sresa1b_ncar_ccsm3_0_run1_200001.nc sresa1b_ncar_ccsm3_0_run1_200001.nc
-Tue Oct 25 15:07:21 2005: ncks -d time,0 sresa1b_ncar_ccsm3_0_run1_200001_201912.nc sresa1b_ncar_ccsm3_0_run1_200001.nc
-Tue Oct 25 13:29:43 2005: ncks -d time,0,239 sresa1b_ncar_ccsm3_0_run1_200001_209912.nc /var/www/html/tmp/sresa1b_ncar_ccsm3_0_run1_200001_201912.nc
-Thu Oct 20 10:47:50 2005: ncks -A -v va /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/sresa1b_ncar_ccsm3_0_run1_va_200001_209912.nc /data/brownmc/sresa1b/atm/mo/tas/ncar_ccsm3_0/run1/sresa1b_ncar_ccsm3_0_run1_200001_209912.nc
-Wed Oct 19 14:55:04 2005: ncks -F -d time,01,1200 /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/sresa1b_ncar_ccsm3_0_run1_va_200001_209912.nc /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/sresa1b_ncar_ccsm3_0_run1_va_200001_209912.nc
-Wed Oct 19 14:53:28 2005: ncrcat /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/foo_05_1200.nc /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/foo_1192_1196.nc /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/sresa1b_ncar_ccsm3_0_run1_va_200001_209912.nc
-Wed Oct 19 14:50:38 2005: ncks -F -d time,05,1200 /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/va_A1.SRESA1B_1.CCSM.atmm.2000-01_cat_2099-12.nc /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/foo_05_1200.nc
-Wed Oct 19 14:49:45 2005: ncrcat /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/va_A1.SRESA1B_1.CCSM.atmm.2000-01_cat_2079-12.nc /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/va_A1.SRESA1B_1.CCSM.atmm.2080-01_cat_2099-12.nc /data/brownmc/sresa1b/atm/mo/va/ncar_ccsm3_0/run1/va_A1.SRESA1B_1.CCSM.atmm.2000-01_cat_2099-12.nc
-Created from CCSM3 case b30.040a
- by wgstrand@ucar.edu
- on Wed Nov 17 14:12:57 EST 2004
- 
- For all data, added IPCC requested metadata
-    table_id: Table A1
-    title: model output prepared for IPCC AR4
-    institution: NCAR (National Center for Atmospheric 
-Research, Boulder, CO, USA)
-    source: CCSM3.0, version beta19 (2004): 
-atmosphere: CAM3.0, T85L26;
-ocean     : POP1.4.3 (modified), gx1v3
-sea ice   : CSIM5.0, T85;
-land      : CLM3.0, gx1v3
-    contact: ccsm@ucar.edu
-    project_id: IPCC Fourth Assessment
-    Conventions: CF-1.0
-    references: Collins, W.D., et al., 2005:
- The Community Climate System Model, Version 3
- Journal of Climate
- 
- Main website: http://www.ccsm.ucar.edu
-    acknowledgment:  Any use of CCSM data should acknowledge the contribution
- of the CCSM project and CCSM sponsor agencies with the 
- following citation:
- 'This research uses data provided by the Community Climate
- System Model project (www.ccsm.ucar.edu), supported by the
- Directorate for Geosciences of the National Science Foundation
- and the Office of Biological and Environmental Research of
- the U.S. Department of Energy.'
-In addition, the words 'Community Climate System Model' and
- 'CCSM' should be included as metadata for webpages referencing
- work using CCSM data or as keywords provided to journal or book
-publishers of your manuscripts.
-Users of CCSM data accept the responsibility of emailing
- citations of publications of research using CCSM data to
- ccsm@ucar.edu.
-Any redistribution of CCSM data must include this data
- acknowledgement statement.
-    realization: 1
-    experiment_id: 720 ppm stabilization experiment (SRESA1B)
-    comment: This simulation was initiated from year 2000 of 
- CCSM3 model run b30.030a and executed on 
- hardware cheetah.ccs.ornl.gov. The input external forcings are
-ozone forcing    : A1B.ozone.128x64_L18_1991-2100_c040528.nc
-aerosol optics   : AerosolOptics_c040105.nc
-aerosol MMR      : AerosolMass_V_128x256_clim_c031022.nc
-carbon scaling   : carbonscaling_A1B_1990-2100_c040609.nc
-solar forcing    : Fixed at 1366.5 W m-2
-GHGs             : ghg_ipcc_A1B_1870-2100_c040521.nc
-GHG loss rates   : noaamisc.r8.nc
-volcanic forcing : none
-DMS emissions    : DMS_emissions_128x256_clim_c040122.nc
-oxidants         : oxid_128x256_L26_clim_c040112.nc
-SOx emissions    : SOx_emissions_A1B_128x256_L2_1990-2100_c040608.nc
- Physical constants used for derived data:
- Lv (latent heat of evaporation): 2.501e6 J kg-1
- Lf (latent heat of fusion     ): 3.337e5 J kg-1
- r[h2o] (density of water      ): 1000 kg m-3
- g2kg   (grams to kilograms    ): 1000 g kg-1
- 
- Integrations were performed by NCAR and CRIEPI with support
- and facilities provided by NSF, DOE, MEXT and ESC/JAMSTEC.
-    model_name_english: NCAR CCSM
-    dimensions(sizes): lat(128), lon(256), bnds(2), plev(17), time(1)
-    variables(dimensions): float32 area(lat,lon), float32 lat(lat), float64 lat_bnds(lat,bnds), float32 lon(lon), float64 lon_bnds(lon,bnds), int32 msk_rgn(lat,lon), float64 plev(plev), float32 pr(time,lat,lon), float32 tas(time,lat,lon), float64 time(time), float64 time_bnds(time,bnds), float32 ua(time,plev,lat,lon)
-    groups:
+<xarray.Dataset>
+Dimensions:    (bnds: 2, lat: 128, lon: 256, plev: 17, time: 1)
+Coordinates:
+  * lat        (lat) float32 -88.93 -87.54 -86.14 -84.74 ... 86.14 87.54 88.93
+  * lon        (lon) float32 0.0 1.406 2.812 4.219 ... 354.4 355.8 357.2 358.6
+  * plev       (plev) float64 1e+05 9.25e+04 8.5e+04 7e+04 ... 3e+03 2e+03 1e+03
+  * time       (time) object 2000-05-16 12:00:00
+Dimensions without coordinates: bnds
+Data variables:
+    area       (lat, lon) float32 ...
+    lat_bnds   (lat, bnds) float64 ...
+    lon_bnds   (lon, bnds) float64 ...
+    msk_rgn    (lat, lon) int32 ...
+    pr         (time, lat, lon) float32 ...
+    tas        (time, lat, lon) float32 ...
+    time_bnds  (time, bnds) object ...
+    ua         (time, plev, lat, lon) float32 ...
+Attributes: (12/18)
+    CVS_Id:              $Id$
+    creation_date:       
+    prg_ID:              Source file unknown Version unknown Date unknown
+    cmd_ln:              bds -x 256 -y 128 -m 23 -o /data/zender/data/dst_T85.nc
+    history:             Tue Oct 25 15:08:51 2005: ncks -O -x -v va -m sresa1...
+    table_id:            Table A1
+    ...                  ...
+    references:          Collins, W.D., et al., 2005:\n The Community Climate...
+    acknowledgment:       Any use of CCSM data should acknowledge the contrib...
+    realization:         1
+    experiment_id:       720 ppm stabilization experiment (SRESA1B)
+    comment:             This simulation was initiated from year 2000 of \n C...
+    model_name_english:  NCAR CCSM
 ~~~
 {: .output} 
  
@@ -583,16 +494,14 @@ we will only show how to handle HDF files with netCDF4 python package.
 Let's first look at **MISR_AM1_CGLS_MAY_2007_F04_0031.hdf** and gets metadata:
 
 <pre data-executable="true" data-language="python">
-from netCDF4 import Dataset
-
-f=Dataset('MISR_AM1_CGLS_MAY_2007_F04_0031.hdf','r')
+import xarray as xr
+f=xr.open_dataset('data/MISR_AM1_CGLS_MAY_2007_F04_0031.hdf')
 print("Metadata for the dataset:")
 print(f)
 print("List of available variables (or key): ")
 f.variable.keys()
 print("Metadata for 'NDVI average' variable: ")
 f.variables["NDVI average"]
-f.close()
 </pre>
 
 ### Quick visualization with Python
@@ -601,16 +510,15 @@ We will see later how to customize our plots and make geographical maps but for 
 [imshow](https://matplotlib.org/api/pyplot_api.html?highlight=imshow#matplotlib.pyplot.imshow) from the [matplotlib](https://matplotlib.org/) package.
  
 <pre data-executable="true" data-language="python">%matplotlib inline
-from netCDF4 import Dataset
+import xarray as xr
 import matplotlib.pyplot as plt
 
-f=Dataset('MISR_AM1_CGLS_MAY_2007_F04_0031.hdf','r')
+f=xr.open_dataset('MISR_AM1_CGLS_MAY_2007_F04_0031.hdf')
 data=f.variables['NDVI average'][:]
 print(type(data))
 print(data.shape)
 plt.imshow(data)
 plt.show()
-f.close()
 </pre>
 
 
@@ -652,10 +560,9 @@ Science Data Systems. As for HDF-EOS, it is an extension of HDF but it is now ba
 > >     while `AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf` is and HDF4 file. You can check either
 > > using the `file` command or in python:
 > > ~~~
-> > from netCDF4 import Dataset
-> > f = Dataset('data/OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5')
+> > import xarray as xr
+> > f = xr.open_dataset('data/OMI-Aura_L3-OMTO3e_2017m0105_v003-2017m0203t091906.he5')
 > > print(f)
-> > f.close()
 > > ~~~
 > > {: .python}
 > > ~~~
@@ -705,12 +612,11 @@ Science Data Systems. As for HDF-EOS, it is an extension of HDF but it is now ba
 > > 2.
 > > ~~~
 > > %matplotlib inline
-> > from netCDF4 import Dataset
-> > f = Dataset('AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf')
+> > import xarray as xr
+> > f = xr.open_dataset('AIRS.2002.08.30.227.L2.RetStd_H.v6.0.12.0.G14101125810.hdf')
 > > data = f.variables['topog']
 > > plt.imshow(data)
 > > plt.show()
-> > f.close()
 > > ~~~
 > > {: .python}
 > > <img src="{{ page.root }}/fig/AIRS_swaft_topog.png" width="500" alt="raster concept" align="middle">
